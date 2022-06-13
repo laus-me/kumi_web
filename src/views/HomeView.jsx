@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {
     CheckCircleIcon,
     InformationCircleIcon,
@@ -6,15 +6,16 @@ import {
 } from '@heroicons/react/outline';
 import EditModal from "../components/EditModal";
 
-function Item() {
+function Item(props) {
+    const {title, description} = props;
     return (
         <div className="flex px-5 py-3 hover:bg-gray-100">
             <div className="flex-none w-10 mr-5">
                 <CheckCircleIcon title="已完成" />
             </div>
             <div className="grow w-64 select-none">
-                <div>Do Something</div>
-                <div>Do the thing</div>
+                <div>{title}</div>
+                <div>{description}</div>
             </div>
             <div className="flex-none w-10 cursor-pointer" title="詳細資料">
                 <InformationCircleIcon title="詳細資料" />
@@ -26,28 +27,29 @@ function Item() {
 export default function HomeView(props) {
     const {db} = props;
     const [list, setList] = useState([]);
-    const [openEditModalValue, setOpenEditModalValue] = useState(false);
 
-    useEffect(() => {
-        db.then(async (i) => {
-            let cursor = await i.transaction('items').store.openCursor();
-            while (cursor) {
-                // eslint-disable-next-line
-                setList((prevState) => [...prevState, cursor]);
-                cursor = await cursor.continue();
-            }
-        });
-    }, [db]);
+    db.then(async (i) => {
+        setList(await i.transaction('items').store.getAll());
+    });
+
+    const [openEditModalValue, setOpenEditModalValue] = useState(false);
+    const pinList = list.filter((i) => i.enabledPin)
 
     return (
         <section className="flex-1 pt-3 md:p-6 lg:mb-0 lg:min-h-0 lg:min-w-0">
-            <EditModal open={openEditModalValue} setOpen={setOpenEditModalValue} />
+            <EditModal db={db} open={openEditModalValue} setOpen={setOpenEditModalValue} />
             <div className="flex flex-col lg:flex-row h-full w-full">
-                <div className="border pb-2 lg:pb-0 w-full lg:max-w-sm px-3 flex flex-row lg:flex-col flex-wrap lg:flex-nowrap">
-                    {list.map((i) => (
-                        <Item/>
-                    ))}
-                </div>
+                {pinList.length > 0 && (
+                    <div className="border pb-2 lg:pb-0 w-full lg:max-w-sm px-3 flex flex-row lg:flex-col flex-wrap lg:flex-nowrap">
+                        {pinList.map((i) => (
+                            <Item
+                                key={i.id}
+                                title={i.title}
+                                description={i.description}
+                            />
+                        ))}
+                    </div>
+                )}
                 <div className="border h-full w-full lg:flex-1 px-3 min-h-0 min-w-0">
                     <div className="bg-white w-full h-full min-h-0 min-w-0 overflow-auto">
                         <div
@@ -63,7 +65,11 @@ export default function HomeView(props) {
                             </div>
                         </div>
                         {list.map((i) => (
-                            <Item/>
+                            <Item
+                                key={i.id}
+                                title={i.title}
+                                description={i.description}
+                            />
                         ))}
                     </div>
                 </div>
