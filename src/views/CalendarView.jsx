@@ -78,7 +78,7 @@ export default function CalendarView() {
     });
 
     return (
-        <div className="bg-white xl:py-8 px-4 lg:max-w-7xl lg:mx-auto lg:px-8">
+        <div className="bg-white xl:py-8 px-4 py-5 lg:py-0 lg:max-w-7xl lg:mx-auto lg:px-8">
             <div className="flex justify-between">
                 <p className="text-4xl font-bold text-gray-800 mb-8">{year}年 {month}月</p>
                 <div>
