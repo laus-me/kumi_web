@@ -46,7 +46,7 @@ function Switcher(props) {
     const {name, value, setValue} = props;
     return (
         <Switch.Group>
-            <div className="flex items-center">
+            <div className="flex items-center justify-center md:justify-start">
                 <Switch.Label className="font-semibold text-gray-600 mr-4">
                     {name}
                 </Switch.Label>
@@ -99,7 +99,7 @@ function TextBox(props) {
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
             ></textarea>
-            <p className="text-xs text-gray-400 text-left my-3">
+            <p className="text-xs text-gray-400 md:text-left my-3">
                 你已經輸入了 {value?.length || "?"} 個字了
             </p>
         </div>
