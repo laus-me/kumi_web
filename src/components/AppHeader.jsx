@@ -16,9 +16,10 @@ function AvatarButton(props) {
             <div className="ml-2 w-10 h-10 ml-auto text-center leading-none text-gray-200">
                 {
                     userProfile.pictureUrl ? (
-                        <img className="border rounded-full" src={userProfile.pictureUrl} alt={userProfile.displayName} />
+                        <img className="border rounded-full" src={userProfile.pictureUrl}
+                             alt={userProfile.displayName}/>
                     ) : (
-                        <UserIcon className="border rounded-full" />
+                        <UserIcon className="border rounded-full"/>
                     )
                 }
             </div>

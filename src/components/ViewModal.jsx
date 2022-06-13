@@ -81,6 +81,8 @@ function ViewModal(props) {
                                     <DetailItem name="備註" content={currentItem.description}/>
                                 }
                                 <DetailItem name="板上釘釘" content={currentItem.enabledPin ? "已釘上歐耶" : "並沒有"}/>
+                                <DetailItem name="事項建立時間" content={currentItem.createdTime}/>
+                                <DetailItem name="最後更新時間" content={currentItem.updatedTime}/>
                             </div>
                         </div>
                     </div>

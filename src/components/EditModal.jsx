@@ -127,7 +127,8 @@ function EditModal(props) {
                     notificationEnd,
                     description,
                     enabledPin,
-                    resolved: currentItem.resolved || false
+                    resolved: currentItem.resolved || false,
+                    updatedTime: dayjs().format('YYYY/MM/DD HH:mm')
                 };
                 if (!data.title) {
                     setWarning("標題為必填欄位");
@@ -153,6 +154,8 @@ function EditModal(props) {
                 }
                 if (currentItem.id) {
                     data.id = currentItem.id;
+                } else {
+                    data.createdTime = dayjs().format('YYYY/MM/DD HH:mm')
                 }
                 await x.transaction('items', 'readwrite').store.put(data);
                 setOpen(false);
