@@ -1,4 +1,4 @@
-import React, {useRef, useState, useEffect} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import {Dialog, Switch} from "@headlessui/react";
 import {CalendarIcon, PlusCircleIcon} from "@heroicons/react/outline";
 import ModalContainer from "./ModalContainer";

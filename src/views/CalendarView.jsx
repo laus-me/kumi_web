@@ -1,8 +1,5 @@
 import React, {useState} from 'react';
-import {
-    getCurrentYearAndMonth,
-    generateMonthWeeks
-} from "../utils/calendar";
+import {generateMonthWeeks, getCurrentYearAndMonth} from "../utils/calendar";
 
 const WEEK_DAYS = ["M", "T", "W", "T", "F", "S", "S"];
 
@@ -62,7 +59,7 @@ export default function CalendarView() {
         <WeekRow key={index}>{
             row.map((item, i) => (
                 item.inMonth
-                    ? <WeekItem key={item.toString()} name={item.getDate()} />
+                    ? <WeekItem key={item.toString()} name={item.getDate()}/>
                     : <WeekItemHidden key={i} name={item.getDate()}/>
             ))
         }</WeekRow>
