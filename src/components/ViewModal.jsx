@@ -5,7 +5,7 @@ import {Dialog} from "@headlessui/react";
 import PropTypes from "prop-types";
 
 function ViewModal(props) {
-    const {open, setOpen, db, data, onEdit} = props;
+    const {open, onClose, setOpen, db, data, onEdit} = props;
     const focusModalButtonRef = useRef(null);
 
     const handleResolve = () => {
@@ -15,6 +15,7 @@ function ViewModal(props) {
         });
     };
     const handleCancel = () => {
+        onClose();
         setOpen(false);
     };
 

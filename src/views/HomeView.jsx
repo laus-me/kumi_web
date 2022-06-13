@@ -48,6 +48,9 @@ export default function HomeView(props) {
         setCurrentItem(i);
         setOpenEditModalValue(true);
     };
+    const handleCloseModal = () => {
+        setCurrentItem({});
+    };
     const handleResolve = (i) => {
         i.resolved = !i.resolved;
         db.then(async (x) => {
@@ -59,6 +62,7 @@ export default function HomeView(props) {
         <section className="flex-1 pt-3 md:p-6 lg:mb-0 lg:min-h-0 lg:min-w-0">
             <ViewModal
                 open={openViewModalValue}
+                onClose={handleCloseModal}
                 setOpen={setOpenViewModalValue}
                 db={db}
                 data={currentItem}
@@ -66,6 +70,7 @@ export default function HomeView(props) {
             />
             <EditModal
                 open={openEditModalValue}
+                onClose={handleCloseModal}
                 setOpen={setOpenEditModalValue}
                 db={db}
                 data={currentItem}

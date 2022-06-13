@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react'
+import React, {useRef, useState, useEffect} from 'react'
 import {Dialog, Switch} from "@headlessui/react";
 import {CalendarIcon, PlusCircleIcon} from "@heroicons/react/outline";
 import ModalContainer from "./ModalContainer";
@@ -106,18 +106,29 @@ function TextBox(props) {
 }
 
 function EditModal(props) {
-    const {open, setOpen, db} = props;
+    const {open, onClose, setOpen, db, data} = props;
     const focusModalButtonRef = useRef(null);
-    const [title, setTitle] = useState("")
-    const [enabledNotification, setEnabledNotification] = useState(false)
-    const [notificationStart, setNotificationStart] = useState("")
-    const [notificationEnd, setNotificationEnd] = useState("")
-    const [description, setDescription] = useState("")
-    const [enabledPin, setEnabledPin] = useState(false)
+    const [id, serId] = useState(null);
+    const [title, setTitle] = useState("");
+    const [enabledNotification, setEnabledNotification] = useState(false);
+    const [notificationStart, setNotificationStart] = useState("");
+    const [notificationEnd, setNotificationEnd] = useState("");
+    const [description, setDescription] = useState("");
+    const [enabledPin, setEnabledPin] = useState(false);
 
+    const clear = () => {
+        serId(null);
+        setTitle("");
+        setEnabledNotification(false);
+        setNotificationStart("");
+        setNotificationEnd("");
+        setDescription("");
+        setEnabledPin(false);
+    };
     const handleSave = () => {
         db.then(async (x) => {
             await x.transaction('items', 'readwrite').store.put({
+                id,
                 title,
                 enabledNotification,
                 notificationStart,
@@ -125,24 +136,40 @@ function EditModal(props) {
                 description,
                 enabledPin
             });
+            onClose();
+            clear();
             setOpen(false);
         });
     };
     const handleCancel = () => {
+        onClose();
+        clear();
         setOpen(false);
     };
+
+    useEffect(() => {
+        if (data.id) {
+            serId(data.id);
+            setTitle(data.title);
+            setEnabledNotification(data.enabledNotification);
+            setNotificationStart(data.notificationStart);
+            setNotificationEnd(data.notificationEnd);
+            setDescription(data.description);
+            setEnabledPin(data.enabledPin);
+        }
+    }, [data]);
 
     return (
         <ModalContainer open={open} setOpen={setOpen} initialFocus={focusModalButtonRef}>
             <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div className="sm:flex sm:items-start">
                     <PlusCircleIcon
-                        title="新增"
+                        title={!id ? "新增" : "編輯"}
                         className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full sm:mx-0 sm:h-10 sm:w-10"
                     />
                     <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                         <Dialog.Title as="h3" className="text-lg leading-6 font-medium text-gray-900">
-                            建立新事項
+                            {!id ? "建立新事項" : "編輯事項"}
                         </Dialog.Title>
                         <div className="mt-2">
                             <div className="flex-auto w-full mb-2 text-xs space-y-2">
