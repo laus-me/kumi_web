@@ -1,6 +1,6 @@
-import React, {Fragment} from 'react'
-import PropTypes from 'prop-types';
-import {Dialog, Transition} from '@headlessui/react'
+import React, {Fragment} from "react"
+import PropTypes from "prop-types";
+import {Dialog, Transition} from "@headlessui/react"
 
 function ModalContainer(props) {
     const {children, open, setOpen, initialFocus} = props;

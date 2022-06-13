@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef} from "react";
 import ModalContainer from "./ModalContainer";
 import {CheckCircleIcon, QuestionMarkCircleIcon} from "@heroicons/react/outline";
 import {Dialog} from "@headlessui/react";
@@ -24,7 +24,7 @@ function ViewModal(props) {
     const handleResolve = () => {
         currentItem.resolved = !currentItem.resolved;
         db
-            .then((x) => x.transaction('items', 'readwrite').store.put(currentItem))
+            .then((x) => x.transaction("items", "readwrite").store.put(currentItem))
             .catch((e) => console.error(e));
     };
     const handleOK = () => {
@@ -40,6 +40,7 @@ function ViewModal(props) {
             <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div className="sm:flex sm:items-start">
                     <div
+                        aria-hidden="true"
                         className="cursor-pointer"
                         onClick={handleResolve}
                     >

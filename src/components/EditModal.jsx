@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react'
+import React, {useRef, useState} from "react"
 import PropTypes from "prop-types";
 import dayjs from "dayjs";
 import {Dialog, Switch} from "@headlessui/react";
@@ -54,7 +54,7 @@ function Switcher(props) {
                     checked={value}
                     onChange={setValue}
                     className={[
-                        value ? 'bg-blue-600' : 'bg-gray-200',
+                        value ? "bg-blue-600" : "bg-gray-200",
                         "relative",
                         "inline-flex",
                         "h-6",
@@ -70,7 +70,7 @@ function Switcher(props) {
                 >
                     <span
                         className={[
-                            value ? 'translate-x-6' : 'translate-x-1',
+                            value ? "translate-x-6" : "translate-x-1",
                             "inline-block",
                             "h-4",
                             "w-4",
@@ -128,19 +128,19 @@ function EditModal(props) {
                     description,
                     enabledPin,
                     resolved: currentItem.resolved || false,
-                    updatedTime: dayjs().format('YYYY/MM/DD HH:mm:ss')
+                    updatedTime: dayjs().format("YYYY/MM/DD HH:mm:ss")
                 };
                 if (!data.title) {
                     setWarning("標題為必填欄位");
                     return;
                 }
                 if (data.enabledNotification) {
-                    const start = dayjs(data.notificationStart, 'YYYY/MM/DD HH:mm', true);
+                    const start = dayjs(data.notificationStart, "YYYY/MM/DD HH:mm", true);
                     if (!start.isValid()) {
                         setWarning("開始提醒時間無效");
                         return;
                     }
-                    const end = dayjs(data.notificationEnd, 'YYYY/MM/DD HH:mm', true);
+                    const end = dayjs(data.notificationEnd, "YYYY/MM/DD HH:mm", true);
                     if (!end.isValid()) {
                         setWarning("結束提醒時間無效");
                         return;
@@ -149,16 +149,16 @@ function EditModal(props) {
                         setWarning("結束提醒時間早於開始提醒時間");
                         return;
                     }
-                    data.notificationStart = start.format('YYYY/MM/DD HH:mm');
-                    data.notificationEnd = end.format('YYYY/MM/DD HH:mm');
+                    data.notificationStart = start.format("YYYY/MM/DD HH:mm");
+                    data.notificationEnd = end.format("YYYY/MM/DD HH:mm");
                 }
                 if (currentItem.id) {
                     data.id = currentItem.id;
                     data.createdTime = currentItem.createdTime;
                 } else {
-                    data.createdTime = dayjs().format('YYYY/MM/DD HH:mm:ss')
+                    data.createdTime = dayjs().format("YYYY/MM/DD HH:mm:ss")
                 }
-                await x.transaction('items', 'readwrite').store.put(data);
+                await x.transaction("items", "readwrite").store.put(data);
                 setOpen(false);
                 onClose();
             })
@@ -167,7 +167,7 @@ function EditModal(props) {
     const handleDelete = () => {
         db
             .then(async (x) => {
-                await x.transaction('items', 'readwrite').store.delete(currentItem.id);
+                await x.transaction("items", "readwrite").store.delete(currentItem.id);
                 setOpen(false);
                 onClose();
             })

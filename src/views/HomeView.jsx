@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
+import React, {useState} from "react";
 import dayjs from "dayjs";
-import {CheckCircleIcon, LinkIcon, PlusCircleIcon, QuestionMarkCircleIcon} from '@heroicons/react/outline';
+import {CheckCircleIcon, LinkIcon, PlusCircleIcon, QuestionMarkCircleIcon} from "@heroicons/react/outline";
 import EditModal from "../components/EditModal";
 import ViewModal from "../components/ViewModal";
 
@@ -9,6 +9,7 @@ function Item(props) {
     return (
         <div className="flex px-5 py-3 hover:bg-gray-100 w-full">
             <div
+                aria-hidden="true"
                 className="flex-none w-10 mr-5 cursor-pointer"
                 onClick={onResolve}
             >
@@ -19,6 +20,7 @@ function Item(props) {
                 }
             </div>
             <div
+                aria-hidden="true"
                 className="grow w-64 select-none cursor-pointer"
                 onClick={onView}
             >
@@ -51,7 +53,7 @@ export default function HomeView(props) {
 
     db
         .then(async (x) => {
-            const allData = await x.transaction('items').store.getAll();
+            const allData = await x.transaction("items").store.getAll();
             allData.sort((a, b) => dayjs(b.updatedTime).diff(dayjs(a.updatedTime)));
             setList(allData);
         })
@@ -72,7 +74,7 @@ export default function HomeView(props) {
         i.resolved = !i.resolved;
         db
             .then(async (x) => {
-                await x.transaction('items', 'readwrite').store.put(i);
+                await x.transaction("items", "readwrite").store.put(i);
             })
             .catch((e) => console.error(e));
     };
@@ -119,6 +121,7 @@ export default function HomeView(props) {
                 <div className="border h-full w-full lg:flex-1 px-3 min-h-0 min-w-0">
                     <div className="bg-white w-full h-full min-h-0 min-w-0 overflow-auto">
                         <div
+                            aria-hidden="true"
                             className="flex px-5 py-3 hover:bg-gray-100 cursor-pointer"
                             onClick={() => setOpenEditModalValue(true)}
                         >

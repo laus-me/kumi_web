@@ -1,5 +1,5 @@
 // Must use lazy loading, for loading as menu.
-import loadable from '@loadable/component';
+import loadable from "@loadable/component";
 
 const routes = [
     {

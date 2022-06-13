@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState} from "react";
 import {generateMonthWeeks, getCurrentYearAndMonth} from "../utils/calendar";
 
 const WEEK_DAYS = ["M", "T", "W", "T", "F", "S", "S"];

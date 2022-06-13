@@ -1,7 +1,7 @@
 import * as React from "react";
-import {Route, Routes} from 'react-router-dom';
-import {openDB} from 'idb';
-import routes from './routes';
+import {Route, Routes} from "react-router-dom";
+import {openDB} from "idb";
+import routes from "./routes";
 
 import RootContainer from "./components/RootContainer";
 import AppContainer from "./components/AppContainer";
@@ -14,13 +14,13 @@ const userProfile = {
     pictureUrl: "https://avatars.githubusercontent.com/u/73846455"
 }
 
-const db = openDB('keisa', 1, {
+const db = openDB("keisa", 1, {
     upgrade(db) {
-        const store = db.createObjectStore('items', {
-            keyPath: 'id',
+        const store = db.createObjectStore("items", {
+            keyPath: "id",
             autoIncrement: true,
         });
-        store.createIndex('date', 'date');
+        store.createIndex("date", "date");
     },
 });
 

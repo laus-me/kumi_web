@@ -1,4 +1,4 @@
-import {matchRoutes, useLocation} from 'react-router-dom';
+import {matchRoutes, useLocation} from "react-router-dom";
 import routes from "../routes";
 
 const useCurrentView = () => {

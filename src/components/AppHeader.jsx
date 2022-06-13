@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import {UserIcon} from "@heroicons/react/outline";
 import {useCurrentView} from "../utils/router";
 
@@ -10,7 +10,7 @@ function AvatarButton(props) {
                 {
                     userProfile.pictureUrl ? (
                         <img className="border rounded-full" src={userProfile.pictureUrl}
-                             alt={userProfile.displayName}/>
+                            alt={userProfile.displayName}/>
                     ) : (
                         <UserIcon className="border rounded-full"/>
                     )
