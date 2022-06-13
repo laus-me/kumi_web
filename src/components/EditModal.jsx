@@ -128,7 +128,7 @@ function EditModal(props) {
                     description,
                     enabledPin,
                     resolved: currentItem.resolved || false,
-                    updatedTime: dayjs().format('YYYY/MM/DD HH:mm')
+                    updatedTime: dayjs().format('YYYY/MM/DD HH:mm:ss')
                 };
                 if (!data.title) {
                     setWarning("標題為必填欄位");
@@ -154,8 +154,9 @@ function EditModal(props) {
                 }
                 if (currentItem.id) {
                     data.id = currentItem.id;
+                    data.createdTime = currentItem.createdTime;
                 } else {
-                    data.createdTime = dayjs().format('YYYY/MM/DD HH:mm')
+                    data.createdTime = dayjs().format('YYYY/MM/DD HH:mm:ss')
                 }
                 await x.transaction('items', 'readwrite').store.put(data);
                 setOpen(false);

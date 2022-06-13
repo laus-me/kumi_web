@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import dayjs from "dayjs";
 import {CheckCircleIcon, LinkIcon, PlusCircleIcon, QuestionMarkCircleIcon} from '@heroicons/react/outline';
 import EditModal from "../components/EditModal";
 import ViewModal from "../components/ViewModal";
@@ -49,7 +50,11 @@ export default function HomeView(props) {
     const [openEditModalValue, setOpenEditModalValue] = useState(false);
 
     db
-        .then(async (x) => setList(await x.transaction('items').store.getAll()))
+        .then(async (x) => {
+            const allData = await x.transaction('items').store.getAll();
+            allData.sort((a, b) => dayjs(b.updatedTime).diff(dayjs(a.updatedTime)));
+            setList(allData);
+        })
         .catch((e) => console.error(e));
 
     const handleView = (i) => {

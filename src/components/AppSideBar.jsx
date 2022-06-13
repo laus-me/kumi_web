@@ -17,7 +17,6 @@ function HeaderIcon() {
 
 function LinkItemIcon(props) {
     const {name, to, viewName} = props;
-    console.log(name, viewName)
     return (
         <li className="sm:border-b border-gray-900 flex-1 sm:w-full" title={name}>
             <Link to={to} className={[
