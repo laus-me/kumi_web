@@ -120,20 +120,6 @@ function EditModal(props) {
     const handleSave = () => {
         db
             .then(async (x) => {
-                if (!title) {
-                    setWarning("標題為必填欄位");
-                    return;
-                }
-                if (enabledNotification) {
-                    if (!dayjs(notificationStart).isValid()) {
-                        setWarning("開始提醒時間無效");
-                        return;
-                    }
-                    if (!dayjs(notificationEnd).isValid()) {
-                        setWarning("結束提醒時間無效");
-                        return;
-                    }
-                }
                 const data = {
                     title,
                     enabledNotification,
@@ -143,6 +129,28 @@ function EditModal(props) {
                     enabledPin,
                     resolved: currentItem.resolved || false
                 };
+                if (!data.title) {
+                    setWarning("標題為必填欄位");
+                    return;
+                }
+                if (data.enabledNotification) {
+                    const start = dayjs(data.notificationStart, 'YYYY/MM/DD HH:mm', true);
+                    if (!start.isValid()) {
+                        setWarning("開始提醒時間無效");
+                        return;
+                    }
+                    const end = dayjs(data.notificationEnd, 'YYYY/MM/DD HH:mm', true);
+                    if (!end.isValid()) {
+                        setWarning("結束提醒時間無效");
+                        return;
+                    }
+                    if (end.isBefore(start)) {
+                        setWarning("結束提醒時間早於開始提醒時間");
+                        return;
+                    }
+                    data.notificationStart = start.format('YYYY/MM/DD HH:mm');
+                    data.notificationEnd = end.format('YYYY/MM/DD HH:mm');
+                }
                 if (currentItem.id) {
                     data.id = currentItem.id;
                 }
