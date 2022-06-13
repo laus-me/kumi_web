@@ -9,8 +9,8 @@ const routes = [
         sideBarButton: true
     },
     {
-        path: "/list",
-        name: "行事曆",
+        path: "/calendar",
+        name: "日曆",
         component: loadable(() => import("./views/CalendarView")),
         sideBarButton: true
     },

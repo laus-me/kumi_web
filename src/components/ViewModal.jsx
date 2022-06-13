@@ -4,19 +4,35 @@ import {CheckCircleIcon, QuestionMarkCircleIcon} from "@heroicons/react/outline"
 import {Dialog} from "@headlessui/react";
 import PropTypes from "prop-types";
 
+function DetailItem(props) {
+    return (
+        <div className="text-gray-600 pt-1">
+            <div className="text-sm font-semibold">
+                {props.name}
+            </div>
+            <div className="w-full h-full">
+                {props.content}
+            </div>
+        </div>
+    )
+}
+
 function ViewModal(props) {
-    const {open, onClose, setOpen, db, data, onEdit} = props;
+    const {open, onClose, setOpen, db, currentItem, onEdit} = props;
     const focusModalButtonRef = useRef(null);
 
     const handleResolve = () => {
-        data.resolved = !data.resolved;
+        currentItem.resolved = !currentItem.resolved;
         db
-            .then((x) => x.transaction('items', 'readwrite').store.put(data))
+            .then((x) => x.transaction('items', 'readwrite').store.put(currentItem))
             .catch((e) => console.error(e));
     };
     const handleOK = () => {
         setOpen(false);
         onClose();
+    };
+    const handleEdit = () => {
+        onEdit(currentItem);
     };
 
     return (
@@ -28,7 +44,7 @@ function ViewModal(props) {
                         onClick={handleResolve}
                     >
                         {
-                            data.resolved
+                            currentItem.resolved
                                 ? (<CheckCircleIcon
                                     title="已完成"
                                     className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full sm:mx-0 sm:h-10 sm:w-10"
@@ -41,18 +57,30 @@ function ViewModal(props) {
                     </div>
                     <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                         <Dialog.Title as="h3" className="text-lg leading-6 font-medium text-gray-900">
-                            {data.title}
+                            {currentItem.resolved ? "已完成" : "未完成"}
                         </Dialog.Title>
                         <div className="mt-2">
-                            <div className="flex-auto w-full mb-2 text-xs space-y-2">
-                                <div className="font-semibold text-gray-600 py-2">
-                                    <div>
-                                        備註
-                                    </div>
-                                    <div className="w-full h-full">
-                                        {data.description}
-                                    </div>
-                                </div>
+                            <div className="flex-auto w-full mb-1 text-base space-y-2">
+                                <DetailItem name="標題" content={currentItem.title}/>
+                                {
+                                    currentItem.enabledNotification && (
+                                        <div>
+                                            <DetailItem
+                                                name="開始提醒時間"
+                                                content={currentItem.notificationStart}
+                                            />
+                                            <DetailItem
+                                                name="結束提醒時間"
+                                                content={currentItem.notificationEnd}
+                                            />
+                                        </div>
+                                    )
+                                }
+                                {
+                                    currentItem.description &&
+                                    <DetailItem name="備註" content={currentItem.description}/>
+                                }
+                                <DetailItem name="板上釘釘" content={currentItem.enabledPin ? "已釘上歐耶" : "並沒有"}/>
                             </div>
                         </div>
                     </div>
@@ -70,7 +98,7 @@ function ViewModal(props) {
                 <button
                     type="button"
                     className="mt-3 sm:mt-0 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm"
-                    onClick={onEdit}
+                    onClick={handleEdit}
                 >
                     編輯
                 </button>

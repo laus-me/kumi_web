@@ -4,7 +4,15 @@ import EditModal from "../components/EditModal";
 import ViewModal from "../components/ViewModal";
 
 function Item(props) {
-    const {title, description, resolved, onView, onResolve} = props;
+    const {
+        title,
+        enabledNotification,
+        notificationStart,
+        notificationEnd,
+        resolved,
+        onView,
+        onResolve
+    } = props;
     return (
         <div className="flex px-5 py-3 hover:bg-gray-100 w-full">
             <div
@@ -21,8 +29,12 @@ function Item(props) {
                 className="grow w-64 select-none cursor-pointer"
                 onClick={onView}
             >
-                <div>{title}</div>
-                <div>{description}</div>
+                <div className="text-black">{title}</div>
+                {enabledNotification && (
+                    <div className="text-gray-600">
+                        已啟用提醒（{notificationStart}～{notificationEnd}）
+                    </div>
+                )}
             </div>
         </div>
     )
@@ -62,21 +74,25 @@ export default function HomeView(props) {
 
     return (
         <section className="flex-1 pt-3 md:p-6 lg:mb-0 lg:min-h-0 lg:min-w-0">
-            <ViewModal
-                open={openViewModalValue}
-                onClose={handleCloseModal}
-                setOpen={setOpenViewModalValue}
-                db={db}
-                data={currentItem}
-                onEdit={handleViewEdit}
-            />
-            <EditModal
-                open={openEditModalValue}
-                onClose={handleCloseModal}
-                setOpen={setOpenEditModalValue}
-                db={db}
-                data={currentItem}
-            />
+            {openViewModalValue && (
+                <ViewModal
+                    open={openViewModalValue}
+                    onClose={handleCloseModal}
+                    setOpen={setOpenViewModalValue}
+                    db={db}
+                    currentItem={currentItem}
+                    onEdit={handleViewEdit}
+                />
+            )}
+            {openEditModalValue && (
+                <EditModal
+                    open={openEditModalValue}
+                    onClose={handleCloseModal}
+                    setOpen={setOpenEditModalValue}
+                    db={db}
+                    currentItem={currentItem}
+                />
+            )}
             <div className="flex flex-col lg:flex-row h-full w-full">
                 {pinList.length > 0 && (
                     <div

@@ -9,6 +9,11 @@ import AppSideBar from "./components/AppSideBar";
 import AppHeader from "./components/AppHeader";
 import AppFooter from "./components/AppFooter";
 
+const userProfile = {
+    displayName: "C109156130 陳柏仰",
+    pictureUrl: "https://avatars.githubusercontent.com/u/73846455"
+}
+
 const db = openDB('keisa', 1, {
     upgrade(db) {
         const store = db.createObjectStore('items', {
@@ -29,7 +34,7 @@ export default function App() {
         <RootContainer>
             <AppSideBar/>
             <AppContainer>
-                <AppHeader/>
+                <AppHeader userProfile={userProfile}/>
                 <Routes>
                     {AppRoutes}
                 </Routes>

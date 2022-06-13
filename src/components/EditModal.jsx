@@ -1,8 +1,9 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React, {useRef, useState} from 'react'
+import PropTypes from "prop-types";
+import dayjs from "dayjs";
 import {Dialog, Switch} from "@headlessui/react";
 import {CalendarIcon, PlusCircleIcon} from "@heroicons/react/outline";
 import ModalContainer from "./ModalContainer";
-import PropTypes from "prop-types";
 
 function InputBox(props) {
     const {name, placeholder, value, setValue} = props;
@@ -28,7 +29,7 @@ function DateSelector(props) {
             <div className="relative focus-within:text-gray-600 text-gray-400">
                 <input
                     type="text"
-                    placeholder="25/02/2020 13:00"
+                    placeholder="2002/03/12 13:00"
                     className="pr-4 pl-10 py-2 border focus:ring-gray-500 focus:border-gray-900 w-full sm:text-sm border-gray-300 rounded-md focus:outline-none text-gray-600"
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
@@ -106,83 +107,82 @@ function TextBox(props) {
 }
 
 function EditModal(props) {
-    const {open, onClose, setOpen, db, data} = props;
+    const {open, onClose, setOpen, db, currentItem} = props;
     const focusModalButtonRef = useRef(null);
-    const [id, serId] = useState(null);
-    const [title, setTitle] = useState("");
-    const [enabledNotification, setEnabledNotification] = useState(false);
-    const [notificationStart, setNotificationStart] = useState("");
-    const [notificationEnd, setNotificationEnd] = useState("");
-    const [description, setDescription] = useState("");
-    const [enabledPin, setEnabledPin] = useState(false);
+    const [title, setTitle] = useState(currentItem.title || "");
+    const [enabledNotification, setEnabledNotification] = useState(currentItem.enabledNotification || false);
+    const [notificationStart, setNotificationStart] = useState(currentItem.notificationStart || "");
+    const [notificationEnd, setNotificationEnd] = useState(currentItem.notificationEnd || "");
+    const [description, setDescription] = useState(currentItem.description || "");
+    const [enabledPin, setEnabledPin] = useState(currentItem.enabledPin || false);
+    const [warning, setWarning] = useState("");
 
-    const clear = () => {
-        serId(null);
-        setTitle("");
-        setEnabledNotification(false);
-        setNotificationStart("");
-        setNotificationEnd("");
-        setDescription("");
-        setEnabledPin(false);
-    };
     const handleSave = () => {
         db
             .then(async (x) => {
-                await x.transaction('items', 'readwrite').store.put({
-                    id,
+                if (!title) {
+                    setWarning("標題為必填欄位");
+                    return;
+                }
+                if (enabledNotification) {
+                    if (!dayjs(notificationStart).isValid()) {
+                        setWarning("開始提醒時間無效");
+                        return;
+                    }
+                    if (!dayjs(notificationEnd).isValid()) {
+                        setWarning("結束提醒時間無效");
+                        return;
+                    }
+                }
+                const data = {
                     title,
                     enabledNotification,
                     notificationStart,
                     notificationEnd,
                     description,
-                    enabledPin
-                });
+                    enabledPin,
+                    resolved: currentItem.resolved || false
+                };
+                if (currentItem.id) {
+                    data.id = currentItem.id;
+                }
+                await x.transaction('items', 'readwrite').store.put(data);
                 setOpen(false);
                 onClose();
-                clear();
             })
             .catch((e) => console.error(e));
     }
     const handleDelete = () => {
         db
             .then(async (x) => {
-                await x.transaction('items', 'readwrite').store.delete(id);
+                await x.transaction('items', 'readwrite').store.delete(currentItem.id);
                 setOpen(false);
                 onClose();
-                clear();
             })
             .catch((e) => console.error(e));
     };
     const handleCancel = () => {
         setOpen(false);
         onClose();
-        clear();
     };
-
-    useEffect(() => {
-        if (data.id) {
-            serId(data.id);
-            setTitle(data.title);
-            setEnabledNotification(data.enabledNotification);
-            setNotificationStart(data.notificationStart);
-            setNotificationEnd(data.notificationEnd);
-            setDescription(data.description);
-            setEnabledPin(data.enabledPin);
-        }
-    }, [data]);
 
     return (
         <ModalContainer open={open} setOpen={setOpen} initialFocus={focusModalButtonRef}>
             <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div className="sm:flex sm:items-start">
                     <PlusCircleIcon
-                        title={!id ? "新增" : "編輯"}
+                        title={!currentItem.id ? "新增" : "編輯"}
                         className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full sm:mx-0 sm:h-10 sm:w-10"
                     />
                     <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                         <Dialog.Title as="h3" className="text-lg leading-6 font-medium text-gray-900">
-                            {!id ? "建立新事項" : "編輯事項"}
+                            {!currentItem.id ? "建立新事項" : "編輯事項"}
                         </Dialog.Title>
+                        {warning && (
+                            <div className="text-red-600 text-sm">
+                                {warning}
+                            </div>
+                        )}
                         <div className="mt-2">
                             <div className="flex-auto w-full mb-2 text-xs space-y-2">
                                 <InputBox
@@ -241,10 +241,10 @@ function EditModal(props) {
                     儲存
                 </button>
                 {
-                    id && (
+                    currentItem.id && (
                         <button
                             type="button"
-                            className="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                            className="mt-3 sm:mt-0 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
                             onClick={handleDelete}
                         >
                             刪除
