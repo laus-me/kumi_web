@@ -1,5 +1,6 @@
 import * as React from "react";
 import {Route, Routes} from 'react-router-dom';
+import {openDB} from 'idb';
 import routes from './routes';
 
 import RootContainer from "./components/RootContainer";
@@ -8,9 +9,19 @@ import AppSideBar from "./components/AppSideBar";
 import AppHeader from "./components/AppHeader";
 import AppFooter from "./components/AppFooter";
 
+const db = openDB('keisa', 1, {
+    upgrade(db) {
+        const store = db.createObjectStore('items', {
+            keyPath: 'id',
+            autoIncrement: true,
+        });
+        store.createIndex('date', 'date');
+    },
+});
+
 // Won't be change after render, fix it for reducing CPU usage
 const AppRoutes = routes.map(({name, path, component: Component}) => (
-    <Route key={name} path={path} element={<Component />}/>
+    <Route key={name} path={path} element={<Component db={db}/>}/>
 ));
 
 export default function App() {
