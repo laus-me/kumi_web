@@ -68,7 +68,7 @@ export default function CalendarView() {
         }</WeekRow>
     ))
 
-    const updateMonth = (direction) => setMonth((prevStateMonth) => {
+    const handleUpdateMonth = (direction) => setMonth((prevStateMonth) => {
         if (!direction && prevStateMonth === 1) {
             setYear((prevStateYear) => prevStateYear - 1);
             return 12;
@@ -87,13 +87,13 @@ export default function CalendarView() {
                 <div>
                     <button
                         className="px-3 py-1 hover:bg-gray-50"
-                        onClick={() => updateMonth(false)}
+                        onClick={() => handleUpdateMonth(false)}
                     >
                         &lt;
                     </button>
                     <button
                         className="px-3 py-1 hover:bg-gray-50"
-                        onClick={() => updateMonth(true)}
+                        onClick={() => handleUpdateMonth(true)}
                     >
                         &gt;
                     </button>
