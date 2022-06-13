@@ -4,15 +4,7 @@ import EditModal from "../components/EditModal";
 import ViewModal from "../components/ViewModal";
 
 function Item(props) {
-    const {
-        title,
-        enabledNotification,
-        notificationStart,
-        notificationEnd,
-        resolved,
-        onView,
-        onResolve
-    } = props;
+    const {metadata, onView, onResolve} = props;
     return (
         <div className="flex px-5 py-3 hover:bg-gray-100 w-full">
             <div
@@ -20,7 +12,7 @@ function Item(props) {
                 onClick={onResolve}
             >
                 {
-                    resolved
+                    metadata.resolved
                         ? (<CheckCircleIcon title="已完成"/>)
                         : (<QuestionMarkCircleIcon title="未完成"/>)
                 }
@@ -29,10 +21,18 @@ function Item(props) {
                 className="grow w-64 select-none cursor-pointer"
                 onClick={onView}
             >
-                <div className="text-black">{title}</div>
-                {enabledNotification && (
+                <div className="text-black">{metadata.title}</div>
+                {metadata.enabledNotification ? (
                     <div className="text-gray-600">
-                        已啟用提醒（{notificationStart}～{notificationEnd}）
+                        {
+                            !metadata.resolved
+                                ? `已啟用提醒（${metadata.notificationStart}～${metadata.notificationEnd}）`
+                                : "歐耶已經完成了"
+                        }
+                    </div>
+                ) : (
+                    <div className="text-gray-600">
+                        {!metadata.resolved ? "要記得完成呦" : "歐耶已經完成了"}
                     </div>
                 )}
             </div>
@@ -104,9 +104,7 @@ export default function HomeView(props) {
                         {pinList.map((i) => (
                             <Item
                                 key={i.id}
-                                title={i.title}
-                                description={i.description}
-                                resolved={i.resolved}
+                                metadata={i}
                                 onView={() => handleView(i)}
                                 onResolve={() => handleResolve(i)}
                             />
@@ -130,9 +128,7 @@ export default function HomeView(props) {
                         {list.map((i) => (
                             <Item
                                 key={i.id}
-                                title={i.title}
-                                description={i.description}
-                                resolved={i.resolved}
+                                metadata={i}
                                 onView={() => handleView(i)}
                                 onResolve={() => handleResolve(i)}
                             />
