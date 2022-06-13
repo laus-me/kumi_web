@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
-import {CheckCircleIcon, PlusCircleIcon, QuestionMarkCircleIcon} from '@heroicons/react/outline';
+import {CheckCircleIcon, LinkIcon, PlusCircleIcon, QuestionMarkCircleIcon} from '@heroicons/react/outline';
 import EditModal from "../components/EditModal";
 import ViewModal from "../components/ViewModal";
 
 function Item(props) {
     const {title, description, resolved, onView, onResolve} = props;
     return (
-        <div className="flex px-5 py-3 hover:bg-gray-100">
+        <div className="flex px-5 py-3 hover:bg-gray-100 w-full">
             <div
                 className="flex-none w-10 mr-5 cursor-pointer"
                 onClick={onResolve}
@@ -36,9 +36,9 @@ export default function HomeView(props) {
     const [openViewModalValue, setOpenViewModalValue] = useState(false);
     const [openEditModalValue, setOpenEditModalValue] = useState(false);
 
-    db.then(async (x) => {
-        setList(await x.transaction('items').store.getAll());
-    });
+    db
+        .then(async (x) => setList(await x.transaction('items').store.getAll()))
+        .catch((e) => console.error(e));
 
     const handleView = (i) => {
         setCurrentItem(i);
@@ -53,9 +53,11 @@ export default function HomeView(props) {
     };
     const handleResolve = (i) => {
         i.resolved = !i.resolved;
-        db.then(async (x) => {
-            await x.transaction('items', 'readwrite').store.put(i);
-        });
+        db
+            .then(async (x) => {
+                await x.transaction('items', 'readwrite').store.put(i);
+            })
+            .catch((e) => console.error(e));
     };
 
     return (
@@ -78,7 +80,11 @@ export default function HomeView(props) {
             <div className="flex flex-col lg:flex-row h-full w-full">
                 {pinList.length > 0 && (
                     <div
-                        className="border pb-2 lg:pb-0 w-full lg:max-w-sm px-3 flex flex-row lg:flex-col flex-wrap lg:flex-nowrap">
+                        className="border mb-3 lg:pb-0 w-full lg:max-w-sm px-3 flex flex-row lg:flex-col flex-wrap lg:flex-nowrap bg-white">
+                        <div className="flex text-gray-600 w-full py-3" title="釘選事項">
+                            <LinkIcon className="h-5 w-5"/>
+                            <span className="ml-1">板上釘釘</span>
+                        </div>
                         {pinList.map((i) => (
                             <Item
                                 key={i.id}
