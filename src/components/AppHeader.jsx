@@ -1,13 +1,6 @@
 import * as React from 'react';
-import {matchRoutes, useLocation} from 'react-router-dom'
 import {UserIcon} from "@heroicons/react/outline";
-import routes from "../routes";
-
-const useCurrentView = () => {
-    const location = useLocation();
-    const [{route}] = matchRoutes(routes, location);
-    return route;
-};
+import {useCurrentView} from "../utils/router";
 
 function AvatarButton(props) {
     const {userProfile} = props;

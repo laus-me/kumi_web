@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom';
 
 import Logo from '../assets/images/logo.svg';
 import routes from "../routes";
+import {useCurrentView} from "../utils/router";
 
 function HeaderIcon() {
     return (
@@ -15,10 +16,17 @@ function HeaderIcon() {
 }
 
 function LinkItemIcon(props) {
-    const {name, to} = props;
+    const {name, to, viewName} = props;
+    console.log(name, viewName)
     return (
         <li className="sm:border-b border-gray-900 flex-1 sm:w-full" title={name}>
-            <Link to={to} className="h-full w-full hover:bg-gray-700 block p-3">
+            <Link to={to} className={[
+                "h-full",
+                "w-full",
+                "block p-3",
+                "hover:bg-gray-700",
+                name === viewName && "bg-gray-900"
+            ].join(" ")}>
                 <i className="fas fa-inbox fill-current">
                     {name}
                 </i>
@@ -28,10 +36,11 @@ function LinkItemIcon(props) {
 }
 
 export default function AppSideBar() {
+    const {name: viewName} = useCurrentView();
     const LinkItemIcons = routes
         .filter((i) => i.sideBarButton)
         .map(({name, path}) => (
-            <LinkItemIcon key={name} name={name} to={path}/>
+            <LinkItemIcon key={name} name={name} to={path} viewName={viewName}/>
         ));
     return (
         <aside className="sm:h-full sm:w-20 w-full h-12 bg-gray-800 text-gray-200">
