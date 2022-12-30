@@ -9,7 +9,7 @@ function HeaderIcon() {
     return (
         <li className="border-b border-gray-900 hidden sm:block">
             <Link to="/" className="h-full w-full hover:bg-gray-700 block p-3">
-                <img src={Logo} alt="Keisa"/>
+                <img src={Logo} alt="Kumi"/>
             </Link>
         </li>
     )

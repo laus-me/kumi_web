@@ -1,7 +1,8 @@
 {
-  "name": "keisa",
+  "name": "kumi_web",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://poyang31.github.io/kumi_web/",
   "dependencies": {
     "@headlessui/react": "^1.6.4",
     "@heroicons/react": "^1.0.6",
